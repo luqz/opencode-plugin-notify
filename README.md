@@ -26,22 +26,34 @@ curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/in
 
 ### 手动安装
 
-如果不希望使用脚本，也可以手动下载：
-
-```bash
-mkdir -p .opencode/plugins/opencode-plugin-notify
-curl -fsSL https://github.com/luqz/opencode-plugin-notify/archive/refs/heads/main.tar.gz | tar -xz -C .opencode/plugins/opencode-plugin-notify --strip-components=1
-```
-
-## 配置
-
-### 复制配置文件
+如果不希望使用脚本，也可以手动下载文件：
 
 **本地安装：**
 
 ```bash
-mkdir -p ~/.config/opencode
-cp .opencode/plugins/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json
+mkdir -p .opencode/plugins
+curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/plugins/notify.js -o .opencode/plugins/notify.js
+curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/notify-config.example.json -o .opencode/notify-config.json
+```
+
+**全局安装：**
+
+```bash
+mkdir -p ~/.config/opencode/plugins/opencode-plugin-notify
+curl -fsSL https://github.com/luqz/opencode-plugin-notify/archive/refs/heads/main.tar.gz | tar -xz -C ~/.config/opencode/plugins/opencode-plugin-notify --strip-components=1
+```
+
+## 配置
+
+### 配置文件
+
+**本地安装：**
+
+安装脚本已自动创建 `./.opencode/notify-config.json`，直接编辑即可：
+
+```bash
+# 编辑本地配置文件
+./.opencode/notify-config.json
 ```
 
 **全局安装：**
@@ -51,7 +63,7 @@ mkdir -p ~/.config/opencode
 cp ~/.config/opencode/plugins/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json
 ```
 
-2. 编辑 `~/.config/opencode/notify-config.json`，填入你的机器人信息：
+编辑配置文件，填入你的机器人信息：
 
 ```json
 {
@@ -96,34 +108,15 @@ export DINGTALK_SECRET="your_secret"
 
 ## 使用方法
 
-### 在 OpenCode 项目中启用
+### 本地安装
 
-**本地安装：**
+OpenCode 会自动加载 `.opencode/plugins/` 目录下的插件，无需手动配置。
 
-```javascript
-// opencode.config.js 或类似配置文件
-import { NotifyPlugin } from './.opencode/plugins/opencode-plugin-notify/plugins/notify.js';
+安装完成后，直接编辑 `./.opencode/notify-config.json` 即可使用。
 
-export default {
-  plugins: [
-    NotifyPlugin
-  ]
-};
-```
+### 全局安装
 
-或使用 CommonJS：
-
-```javascript
-const { NotifyPlugin } = require('./.opencode/plugins/opencode-plugin-notify/plugins/notify.js');
-
-module.exports = {
-  plugins: [
-    NotifyPlugin
-  ]
-};
-```
-
-**全局安装：**
+在 `opencode.config.js` 中引入插件：
 
 ```javascript
 import { NotifyPlugin } from '~/.config/opencode/plugins/opencode-plugin-notify/plugins/notify.js';
