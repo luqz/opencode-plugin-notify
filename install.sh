@@ -24,40 +24,55 @@ done
 
 # 确定安装路径
 if [ "$GLOBAL" = true ]; then
-  INSTALL_DIR="$HOME/.config/opencode/plugins/opencode-plugin-notify"
+  INSTALL_DIR="$HOME/.config/opencode"
+  PLUGIN_DIR="$INSTALL_DIR/plugins"
   echo "🌐 正在全局安装 opencode-plugin-notify..."
 
   # 创建目录
-  echo "📁 创建目录: $INSTALL_DIR"
-  mkdir -p "$INSTALL_DIR"
+  echo "📁 创建目录: $PLUGIN_DIR"
+  mkdir -p "$PLUGIN_DIR"
 
-  # 下载并解压
-  echo "⬇️  下载最新代码..."
-  TMP_DIR=$(mktemp -d)
-  trap "rm -rf $TMP_DIR" EXIT
-
-  curl -fsSL "https://github.com/${REPO}/archive/refs/heads/${BRANCH}.tar.gz" | tar -xz -C "$TMP_DIR" --strip-components=1
-
-  # 复制文件
+  # 复制或下载文件
   echo "📋 复制文件..."
-  cp -r "$TMP_DIR"/* "$INSTALL_DIR/"
+  if [ -f "plugins/notify.js" ]; then
+    cp "plugins/notify.js" "$PLUGIN_DIR/notify.js"
+    if [ -f "$INSTALL_DIR/notify-config.json" ]; then
+      BACKUP="$INSTALL_DIR/notify-config.json.bak.$(date +%s)"
+      cp "$INSTALL_DIR/notify-config.json" "$BACKUP"
+      echo "💾 已备份旧配置: $BACKUP"
+    fi
+    cp "notify-config.example.json" "$INSTALL_DIR/notify-config.json"
+  else
+    echo "⬇️  下载最新代码..."
+    curl -fsSL "${RAW_URL}/plugins/notify.js" -o "$PLUGIN_DIR/notify.js"
+
+    if [ -f "$INSTALL_DIR/notify-config.json" ]; then
+      BACKUP="$INSTALL_DIR/notify-config.json.bak.$(date +%s)"
+      cp "$INSTALL_DIR/notify-config.json" "$BACKUP"
+      echo "💾 已备份旧配置: $BACKUP"
+    fi
+    curl -fsSL "${RAW_URL}/notify-config.example.json" -o "$INSTALL_DIR/notify-config.json"
+  fi
 
   # 输出结果
   echo ""
   echo "✅ 安装完成！"
   echo ""
-  echo "📍 安装路径: $INSTALL_DIR"
+  echo "📍 安装文件:"
+  echo "   $PLUGIN_DIR/notify.js"
+  echo "   $INSTALL_DIR/notify-config.json"
   echo ""
   echo "📝 下一步操作："
   echo ""
-  echo "1. 复制配置文件："
-  echo "   mkdir -p ~/.config/opencode"
-  echo "   cp ~/.config/opencode/plugins/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json"
+  echo "1. 编辑配置文件，填入你的机器人信息："
+  echo "   $INSTALL_DIR/notify-config.json"
   echo ""
-  echo "2. 编辑配置文件，填入你的机器人信息"
+  echo "   或者通过环境变量配置（优先级高于配置文件）："
+  echo "   export DINGTALK_TOKEN=xxx DINGTALK_SECRET=xxx"
+  echo "   export FEISHU_TOKEN=xxx FEISHU_SECRET=xxx"
   echo ""
-  echo "3. 在 opencode.config.js 中引入插件："
-  echo "   import { NotifyPlugin } from '~/.config/opencode/plugins/opencode-plugin-notify/plugins/notify.js';"
+  echo "2. 在 opencode.config.js 中引入插件："
+  echo "   import { NotifyPlugin } from '~/.config/opencode/plugins/notify.js';"
 else
   echo "📦 正在本地安装 opencode-plugin-notify..."
 

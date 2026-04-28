@@ -39,8 +39,9 @@ curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/no
 **全局安装：**
 
 ```bash
-mkdir -p ~/.config/opencode/plugins/opencode-plugin-notify
-curl -fsSL https://github.com/luqz/opencode-plugin-notify/archive/refs/heads/main.tar.gz | tar -xz -C ~/.config/opencode/plugins/opencode-plugin-notify --strip-components=1
+mkdir -p ~/.config/opencode/plugins
+curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/plugins/notify.js -o ~/.config/opencode/plugins/notify.js
+curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/notify-config.example.json -o ~/.config/opencode/notify-config.json
 ```
 
 ## 配置
@@ -58,9 +59,11 @@ curl -fsSL https://github.com/luqz/opencode-plugin-notify/archive/refs/heads/mai
 
 **全局安装：**
 
+配置文件已下载到 `~/.config/opencode/notify-config.json`，直接编辑即可：
+
 ```bash
-mkdir -p ~/.config/opencode
-cp ~/.config/opencode/plugins/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json
+# 编辑全局配置文件
+~/.config/opencode/notify-config.json
 ```
 
 编辑配置文件，填入你的机器人信息：
