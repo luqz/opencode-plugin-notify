@@ -1,12 +1,12 @@
 {
   "dingtalk": {
-    "enabled": false,
+    "enabled": true,
     "token": "YOUR_DINGTALK_TOKEN",
     "secret": "YOUR_DINGTALK_SECRET",
     "useSign": true
   },
   "feishu": {
-    "enabled": false,
+    "enabled": true,
     "token": "YOUR_FEISHU_TOKEN",
     "secret": "YOUR_FEISHU_SECRET",
     "useSign": true,
