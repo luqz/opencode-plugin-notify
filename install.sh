@@ -96,6 +96,10 @@ else
   echo ""
   echo "1. 编辑配置文件，填入你的机器人信息："
   echo "   ./.opencode/notify-config.json"
+  echo ""
+  echo "   或者通过环境变量配置（优先级高于配置文件）："
+  echo "   export DINGTALK_TOKEN=xxx DINGTALK_SECRET=xxx"
+  echo "   export FEISHU_TOKEN=xxx FEISHU_SECRET=xxx"
 fi
 
 echo ""
