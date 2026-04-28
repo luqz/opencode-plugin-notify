@@ -131,15 +131,20 @@ async function sendFeishu(config, message) {
   }
 }
 
-async function sendNotification(config, message) {
+function formatMessage(keyword, content) {
+  const prefix = keyword ? `[${keyword}] ` : "";
+  return `${prefix}${content}`;
+}
+
+async function sendNotification(config, messages) {
   if (!config) return;
 
   const promises = [];
-  if (config.dingtalk?.enabled) {
-    promises.push(sendDingTalk(config.dingtalk, message));
+  if (config.dingtalk?.enabled && messages.dingtalk) {
+    promises.push(sendDingTalk(config.dingtalk, messages.dingtalk));
   }
-  if (config.feishu?.enabled) {
-    promises.push(sendFeishu(config.feishu, message));
+  if (config.feishu?.enabled && messages.feishu) {
+    promises.push(sendFeishu(config.feishu, messages.feishu));
   }
   await Promise.all(promises);
 }
@@ -157,8 +162,9 @@ export const NotifyPlugin = async ({ project, directory }) => {
 
       if (event.type === "permission.asked") {
         try {
-          const keyword = config.feishu?.keyword ? `[${config.feishu.keyword}] ` : "";
-          const msg = `${keyword}## ⚠️ 需要权限确认
+          const dingtalkKeyword = config.dingtalk?.keyword !== undefined ? config.dingtalk.keyword : "OpenCode";
+          const feishuKeyword = config.feishu?.keyword || "";
+          const baseMsg = `## ⚠️ 需要权限确认
 
 **项目：** ${project?.name || directory}
 **工具：** \`${event?.tool || "unknown"}\`
@@ -166,7 +172,10 @@ export const NotifyPlugin = async ({ project, directory }) => {
 
 请打开 OpenCode 查看详情并处理。`;
 
-          await sendNotification(config, msg);
+          await sendNotification(config, {
+            dingtalk: formatMessage(dingtalkKeyword, baseMsg),
+            feishu: formatMessage(feishuKeyword, baseMsg)
+          });
         } catch (e) {
           console.error("[notify] 权限通知发送失败:", e.message);
         }
@@ -174,14 +183,18 @@ export const NotifyPlugin = async ({ project, directory }) => {
 
       if (event.type === "session.idle") {
         try {
-          const keyword = config.feishu?.keyword ? `[${config.feishu.keyword}] ` : "";
-          const msg = `${keyword}## ✅ 任务完成
+          const dingtalkKeyword = config.dingtalk?.keyword !== undefined ? config.dingtalk.keyword : "OpenCode";
+          const feishuKeyword = config.feishu?.keyword || "";
+          const baseMsg = `## ✅ 任务完成
 
 **项目：** ${project?.name || directory}
 
 OpenCode 已完成当前任务，会话已空闲。`;
 
-          await sendNotification(config, msg);
+          await sendNotification(config, {
+            dingtalk: formatMessage(dingtalkKeyword, baseMsg),
+            feishu: formatMessage(feishuKeyword, baseMsg)
+          });
         } catch (e) {
           console.error("[notify] 空闲通知发送失败:", e.message);
         }
@@ -189,15 +202,19 @@ OpenCode 已完成当前任务，会话已空闲。`;
 
       if (event.type === "session.error") {
         try {
-          const keyword = config.feishu?.keyword ? `[${config.feishu.keyword}] ` : "";
-          const msg = `${keyword}## ❌ 发生错误
+          const dingtalkKeyword = config.dingtalk?.keyword !== undefined ? config.dingtalk.keyword : "OpenCode";
+          const feishuKeyword = config.feishu?.keyword || "";
+          const baseMsg = `## ❌ 发生错误
 
 **项目：** ${project?.name || directory}
 **错误：** ${event?.error?.message || "未知错误"}
 
 请检查 OpenCode 会话详情。`;
 
-          await sendNotification(config, msg);
+          await sendNotification(config, {
+            dingtalk: formatMessage(dingtalkKeyword, baseMsg),
+            feishu: formatMessage(feishuKeyword, baseMsg)
+          });
         } catch (e) {
           console.error("[notify] 错误通知发送失败:", e.message);
         }
