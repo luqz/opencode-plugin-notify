@@ -1,14 +1,14 @@
-#!/bin/bash
+#!/bin/sh
 
 set -e
 
-SCRIPT_DIR="$(cd "$(dirname "${BASH_SOURCE[0]}")" && pwd)"
 REPO="luqz/opencode-plugin-notify"
 BRANCH="main"
+RAW_URL="https://raw.githubusercontent.com/${REPO}/${BRANCH}"
 
 # 解析参数
 GLOBAL=false
-while [[ $# -gt 0 ]]; do
+while [ $# -gt 0 ]; do
   case $1 in
     -g|--global)
       GLOBAL=true
@@ -66,8 +66,13 @@ else
 
   # 复制文件
   echo "📋 复制文件..."
-  cp "$SCRIPT_DIR/plugins/notify.js" "./.opencode/plugins/notify.js"
-  cp "$SCRIPT_DIR/notify-config.example.json" "./.opencode/notify-config.json"
+  if [ -f "plugins/notify.js" ]; then
+    cp "plugins/notify.js" "./.opencode/plugins/notify.js"
+    cp "notify-config.example.json" "./.opencode/notify-config.json"
+  else
+    curl -fsSL "${RAW_URL}/plugins/notify.js" -o "./.opencode/plugins/notify.js"
+    curl -fsSL "${RAW_URL}/notify-config.example.json" -o "./.opencode/notify-config.json"
+  fi
 
   # 输出结果
   echo ""
