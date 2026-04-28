@@ -68,9 +68,19 @@ else
   echo "📋 复制文件..."
   if [ -f "plugins/notify.js" ]; then
     cp "plugins/notify.js" "./.opencode/plugins/notify.js"
+    if [ -f "./.opencode/notify-config.json" ]; then
+      BACKUP="./.opencode/notify-config.json.bak.$(date +%s)"
+      cp "./.opencode/notify-config.json" "$BACKUP"
+      echo "💾 已备份旧配置: $BACKUP"
+    fi
     cp "notify-config.example.json" "./.opencode/notify-config.json"
   else
     curl -fsSL "${RAW_URL}/plugins/notify.js" -o "./.opencode/plugins/notify.js"
+    if [ -f "./.opencode/notify-config.json" ]; then
+      BACKUP="./.opencode/notify-config.json.bak.$(date +%s)"
+      cp "./.opencode/notify-config.json" "$BACKUP"
+      echo "💾 已备份旧配置: $BACKUP"
+    fi
     curl -fsSL "${RAW_URL}/notify-config.example.json" -o "./.opencode/notify-config.json"
   fi
 
