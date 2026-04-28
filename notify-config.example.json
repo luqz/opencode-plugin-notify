@@ -1,0 +1,20 @@
+{
+  "dingtalk": {
+    "enabled": false,
+    "token": "YOUR_DINGTALK_TOKEN",
+    "secret": "YOUR_DINGTALK_SECRET",
+    "useSign": true
+  },
+  "feishu": {
+    "enabled": false,
+    "token": "YOUR_FEISHU_TOKEN",
+    "secret": "YOUR_FEISHU_SECRET",
+    "useSign": true,
+    "keyword": "OpenCode"
+  },
+  "events": {
+    "permission.asked": true,
+    "session.idle": true,
+    "session.error": true
+  }
+}

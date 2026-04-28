@@ -1,0 +1,27 @@
+{
+  "name": "opencode-plugin-notify",
+  "version": "1.0.0",
+  "description": "OpenCode 通知插件 - 支持钉钉和飞书",
+  "main": "plugins/notify.js",
+  "keywords": [
+    "opencode",
+    "plugin",
+    "notify",
+    "dingtalk",
+    "feishu",
+    "lark"
+  ],
+  "author": "luqz",
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/luqz/opencode-plugin-notify.git"
+  },
+  "bugs": {
+    "url": "https://github.com/luqz/opencode-plugin-notify/issues"
+  },
+  "homepage": "https://github.com/luqz/opencode-plugin-notify#readme",
+  "peerDependencies": {
+    "@opencode-ai/plugin": ">=1.14.0"
+  }
+}
