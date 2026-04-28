@@ -14,25 +14,41 @@ OpenCode 通知插件，支持钉钉和飞书机器人推送。
 
 ## 安装
 
-一条命令安装到项目中：
+### 快速安装（推荐）
 
 ```bash
-npm install github:luqz/opencode-plugin-notify
+# 安装到当前目录（默认）
+curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/install.sh | sh
+
+# 全局安装（安装到 ~/.config/opencode/plugins/）
+curl -fsSL https://raw.githubusercontent.com/luqz/opencode-plugin-notify/main/install.sh | sh -s -- -g
 ```
 
-或使用 yarn：
+### 手动安装
+
+如果不希望使用脚本，也可以手动下载：
 
 ```bash
-yarn add github:luqz/opencode-plugin-notify
+mkdir -p .opencode/plugins/opencode-plugin-notify
+curl -fsSL https://github.com/luqz/opencode-plugin-notify/archive/refs/heads/main.tar.gz | tar -xz -C .opencode/plugins/opencode-plugin-notify --strip-components=1
 ```
 
 ## 配置
 
-1. 复制示例配置文件到 OpenCode 配置目录：
+### 复制配置文件
+
+**本地安装：**
 
 ```bash
 mkdir -p ~/.config/opencode
-cp node_modules/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json
+cp .opencode/plugins/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json
+```
+
+**全局安装：**
+
+```bash
+mkdir -p ~/.config/opencode
+cp ~/.config/opencode/plugins/opencode-plugin-notify/notify-config.example.json ~/.config/opencode/notify-config.json
 ```
 
 2. 编辑 `~/.config/opencode/notify-config.json`，填入你的机器人信息：
@@ -82,11 +98,11 @@ export DINGTALK_SECRET="your_secret"
 
 ### 在 OpenCode 项目中启用
 
-在你的 OpenCode 项目配置中引入插件：
+**本地安装：**
 
 ```javascript
 // opencode.config.js 或类似配置文件
-import { NotifyPlugin } from 'opencode-plugin-notify';
+import { NotifyPlugin } from './.opencode/plugins/opencode-plugin-notify/plugins/notify.js';
 
 export default {
   plugins: [
@@ -98,9 +114,21 @@ export default {
 或使用 CommonJS：
 
 ```javascript
-const { NotifyPlugin } = require('opencode-plugin-notify');
+const { NotifyPlugin } = require('./.opencode/plugins/opencode-plugin-notify/plugins/notify.js');
 
 module.exports = {
+  plugins: [
+    NotifyPlugin
+  ]
+};
+```
+
+**全局安装：**
+
+```javascript
+import { NotifyPlugin } from '~/.config/opencode/plugins/opencode-plugin-notify/plugins/notify.js';
+
+export default {
   plugins: [
     NotifyPlugin
   ]
