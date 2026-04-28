@@ -96,9 +96,6 @@ else
   echo ""
   echo "1. 编辑配置文件，填入你的机器人信息："
   echo "   ./.opencode/notify-config.json"
-  echo ""
-  echo "2. 在 opencode.config.js 中引入插件："
-  echo "   import { NotifyPlugin } from './.opencode/plugins/notify.js';"
 fi
 
 echo ""
