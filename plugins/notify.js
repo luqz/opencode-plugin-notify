@@ -4,32 +4,42 @@ import { join } from "path";
 import { homedir } from "os";
 
 function loadConfig() {
-  const configPath = join(homedir(), ".config", "opencode", "notify-config.json");
+  const localPath = join(process.cwd(), ".opencode", "notify-config.json");
+  const globalPath = join(homedir(), ".config", "opencode", "notify-config.json");
+
+  let configPath = localPath;
+  let config;
+
   try {
-    const config = JSON.parse(readFileSync(configPath, "utf-8"));
-
-    if (config.dingtalk) {
-      config.dingtalk.token = process.env.DINGTALK_TOKEN || config.dingtalk.token;
-      config.dingtalk.secret = process.env.DINGTALK_SECRET || config.dingtalk.secret;
-    }
-    if (config.feishu) {
-      config.feishu.token = process.env.FEISHU_TOKEN || config.feishu.token;
-      config.feishu.secret = process.env.FEISHU_SECRET || config.feishu.secret;
-    }
-
-    return {
-      ...config,
-      events: {
-        "permission.asked": true,
-        "session.idle": true,
-        "session.error": true,
-        ...config.events
-      }
-    };
+    config = JSON.parse(readFileSync(localPath, "utf-8"));
   } catch (e) {
-    console.error("[notify] 无法加载配置文件:", configPath);
-    return null;
+    try {
+      configPath = globalPath;
+      config = JSON.parse(readFileSync(globalPath, "utf-8"));
+    } catch (e2) {
+      console.error("[notify] 无法加载配置文件，已尝试:", localPath, globalPath);
+      return null;
+    }
   }
+
+  if (config.dingtalk) {
+    config.dingtalk.token = process.env.DINGTALK_TOKEN || config.dingtalk.token;
+    config.dingtalk.secret = process.env.DINGTALK_SECRET || config.dingtalk.secret;
+  }
+  if (config.feishu) {
+    config.feishu.token = process.env.FEISHU_TOKEN || config.feishu.token;
+    config.feishu.secret = process.env.FEISHU_SECRET || config.feishu.secret;
+  }
+
+  return {
+    ...config,
+    events: {
+      "permission.asked": true,
+      "session.idle": true,
+      "session.error": true,
+      ...config.events
+    }
+  };
 }
 
 function signDingTalk(secret) {
